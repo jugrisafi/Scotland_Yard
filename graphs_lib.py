@@ -79,7 +79,7 @@ def edgesWithThisVert(g, v):
                 finalList.append(x)
     return finalList
 
-# Start borrowed code
+# Start borrowed code: cf - https://startupnextdoor.com/dijkstras-algorithm-in-python-3/
 import queue
 from collections import namedtuple
 

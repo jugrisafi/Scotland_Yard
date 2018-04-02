@@ -78,7 +78,7 @@ def edgesWithThisVert(g, v):
                 finalList.append(x)
     return finalList
 
-# Start stolen code
+# Start borrowed code
 import queue
 from collections import namedtuple
 

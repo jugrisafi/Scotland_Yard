@@ -58,30 +58,30 @@ def convert_pairs_to_lists(edge_pairs):
     pass
 
 
-def convert_lists_to_pairs(edge_lists):
+def convert_lists_to_pairs(edge_lists_df):
     """
     Convert edge_lists from a list of adjacent neighbors to a list of ordered
     pairs.
 
     Args:
-        edge_lists:
+        edge_lists_df:
 
     Returns:
 
     """
     # Replace empty cells with -1
-    edge_lists.replace('--', '-1', inplace=True)
+    edge_lists_df.replace('--', '-1', inplace=True)
 
     # Split each column of from a comma separated to a list
-    edge_lists["Taxi"] = edge_lists["Taxi"].str.split(',')
-    edge_lists["Bus"] = edge_lists["Bus"].str.split(',')
-    edge_lists["Subway"] = edge_lists["Subway"].str.split(',')
-    edge_lists["Boat"] = edge_lists["Boat"].str.split(',')
+    edge_lists_df["Taxi"] = edge_lists_df["Taxi"].str.split(',')
+    edge_lists_df["Bus"] = edge_lists_df["Bus"].str.split(',')
+    edge_lists_df["Subway"] = edge_lists_df["Subway"].str.split(',')
+    edge_lists_df["Boat"] = edge_lists_df["Boat"].str.split(',')
 
 
 
     # Convert each column of edges into a dictionary
-    taxi_edges = pd.Series(edge_lists["Taxi"].values, index=edge_lists.Vertex)
+    taxi_edges = pd.Series(edge_lists_df["Taxi"].values, index=edge_lists_df.Vertex)
     taxi_edges = taxi_edges.to_dict()
     for vertex, edges in taxi_edges.items():
         # For each edge list of a given vertex, convert from a list of strings
@@ -99,7 +99,7 @@ def convert_lists_to_pairs(edge_lists):
         # Replace dictionary value
         taxi_edges[vertex] = new_edges
 
-    bus_edges = pd.Series(edge_lists["Bus"].values, index=edge_lists.Vertex)
+    bus_edges = pd.Series(edge_lists_df["Bus"].values, index=edge_lists_df.Vertex)
     bus_edges = bus_edges.to_dict()
     for vertex, edges in bus_edges.items():
         # For each edge list of a given vertex, convert from a list of strings
@@ -117,7 +117,7 @@ def convert_lists_to_pairs(edge_lists):
         # Replace dictionary value
         bus_edges[vertex] = new_edges
 
-    subway_edges = pd.Series(edge_lists["Subway"].values, index=edge_lists.Vertex)
+    subway_edges = pd.Series(edge_lists_df["Subway"].values, index=edge_lists_df.Vertex)
     subway_edges = subway_edges.to_dict()
     for vertex, edges in subway_edges.items():
         # For each edge list of a given vertex, convert from a list of strings
@@ -135,7 +135,7 @@ def convert_lists_to_pairs(edge_lists):
         # Replace dictionary value
         subway_edges[vertex] = new_edges
 
-    boat_edges = pd.Series(edge_lists["Boat"].values, index=edge_lists.Vertex)
+    boat_edges = pd.Series(edge_lists_df["Boat"].values, index=edge_lists_df.Vertex)
     boat_edges = boat_edges.to_dict()
     for vertex, edges in boat_edges.items():
         # For each edge list of a given vertex, convert from a list of strings
@@ -176,7 +176,7 @@ def convert_lists_to_pairs(edge_lists):
 
     pairs_df.index.name = "Vertex"
 
-    pairs_df.fillna('--', inplace=True)
+    pairs_df.replace('', '--', inplace=True)
 
     return pairs_df
 

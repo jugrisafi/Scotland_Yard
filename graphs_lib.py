@@ -4,6 +4,42 @@
 def instantiateGraph(verts, edges):
     return 0
 
+#this makes an adjacency list graph from an input file
+#it assumes that the input file is a series of edges
+#which are written as ordered pairs (x, y) where x < y
+def makeGraphFromFile(inputFile):
+    edgeList = makeEdgeListFromFile(inputFile)
+    myGraph = []
+
+    #set up the blank sets for each element of the edge list
+    for e in edgeList:
+        myGraph.append(set())
+
+    #we add one more because we won't zero index our graph...we'll just keep the zero index "null"
+    myGraph.append(set())
+
+    for e in edgeList:
+        myGraph[e[0]].add(e[1])
+
+    return myGraph
+
+#This takes in an input file of edges which follows the "canonical scheme"
+#(edges are written as ordered pairs (x, y) where x < y)
+# and returns a list of sets (or 2-tuples...I'm not sure which is best)
+def makeEdgeListFromFile(inputFile):
+    edgeList = []
+    with open(inputFile, "r") as f:
+        for s in f:
+            nums = s.split(';')
+            # Vertex, Taxi, Bus, Subway, Boat
+            # remember to strip /", should they exist
+
+
+
+
+    return edgeList
+
+
 # add vertex v to graph g
 def addVertex(g, v):
     g[0].append(v)

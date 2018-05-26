@@ -39,6 +39,29 @@ def makeEdgeListFromFile(inputFile):
 
     return edgeList
 
+# This takes in a graph in the form of an adjacency list, and
+# returns a graph in the form of an adjacency matrix.
+def makeAdjacencyMatrixFromAdjacencyList(adjacencyList):
+    # first, we set up the matrix and set all entries to 0
+    matrix = [[0 for i in range(len(adjacencyList))] for j in range(len(adjacencyList))]
+
+    # next, we'll set all entries in row 0 and column 0 to -2, since those values are off limits (we're not zero indexing our verticies)
+    # and we'll set all entries of [x][x] to -1
+    for i in range(len(matrix)):
+        matrix[i][i] = -1
+        matrix[0][i] = -2
+        matrix[i][0] = -2
+
+    # finally, we read in each edge from the list, and properly enter it into the matrix
+    for v1 in adjacencyList:
+        for v2 in v1:
+            matrix[v1][v2] = 1
+            # if all protocols of our graph data have been followed, this line is redundant (because the data should always have v1<v2,
+            # but we're adding it here just in case, since it doesn't really hurt us in run time
+            matrix[v2][v1] = 1
+
+    # and we return the completed matrix
+    return matrix
 
 # add vertex v to graph g
 def addVertex(g, v):

@@ -63,6 +63,34 @@ def makeAdjacencyMatrixFromAdjacencyList(adjacencyList):
     # and we return the completed matrix
     return matrix
 
+# This function takes in an adjacencyMatrix representation of a graph
+# and it then fills in all 0's with the minimum distance between those nodes
+# a writeup of the algorithm is forthcoming
+def setMinimumDistances(graph, adjacencyList):
+    counter = 1
+    anyZeros = True
+
+    while(anyZeros):
+        anyZeros = False
+        for i in range(len(graph)):
+            for j in range(len(graph)):
+                # first, we'll do a check to see if the data is a zero...if, so, we set anyZeros back to true to make sure we "scan" the graph again
+                if graph[i][j] == 0:
+                    anyZeros = True
+
+                # next, we do the actual work of changing values in our matrix
+                # by induction, we only need to worry about values equal to the current
+                # value of our counter variable
+                if graph[i][j] == counter:
+                    # we look at all verticies directly connected to i, and update their distance to j to be counter + 1 if they are not already connected to j (by a shorter route)
+                    for v in adjacencyList[i]:
+                        if graph[i][v] == 0:
+                            graph[i][v] = counter + 1
+
+        counter += 1
+
+    return graph
+
 # add vertex v to graph g
 def addVertex(g, v):
     g[0].append(v)

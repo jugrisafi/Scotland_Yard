@@ -1,4 +1,6 @@
-# Fiona Testing git
+import pickle
+
+
 # returns a graph g, made up of a tuple of verts and edges
 # it should properly format a vertex and edge list
 def instantiateGraph(verts, edges):
@@ -126,3 +128,35 @@ def setMinimumDistances(graph, adjacencyList):
 # returns minimum distance between v1 and v2 on graph g
 def findDistance(gAdjacencyMatrix, v1, v2):
     return gAdjacencyMatrix[v1][v2]
+
+
+def pickleGraph(graph, filename):
+    """
+    Saves object to file.
+
+    Args:
+        graph (2d list): object to pickle
+        filename (str): location to save pickle
+
+    Returns:
+
+    """
+    with open(filename, 'wb') as outfile:
+        pickle.dump(graph, outfile)
+
+
+def unpickleGraph(filename):
+    """
+    Loads object from file.
+
+    Args:
+        filename (str): location of pickle
+
+    Returns:
+        graph: un-pickled object
+
+    """
+    with open(filename, 'rb') as infile:
+        graph = pickle.load(infile)
+
+    return graph

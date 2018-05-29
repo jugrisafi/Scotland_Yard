@@ -105,15 +105,19 @@ def setMinimumDistances(graph, adjacencyList):
     # of needing to do a conditional every time a distance is checked
     for i in range(len(graph)+1):
         for j in range(i+1):
-            # we'll do two checks for errors...this is because I'm being a little paranoid
-            # about the fact that I will not look through all 40,000 values by hand to see if they are right
-            # first, we'll check to make sure all edges have been properly preserved
-            if (graph[i][j] == 1 && graph[j][i] != 1):
-                raise UserWarning("Matrix data has been corrupted. Upper half edge not found in lower half.")
-            # second, we'll make sure that the lower half didn't get any stray data
-            if (graph[i][j] != 1 && graph[j][i] != 0):
-                raise UserWarning("Matrix data has been corrupted. Lower half contains unexpected data.")
-            graph[j][i] = graph[i][j]
+            # we want to ignore the zero column and row, plus the main diagonal
+            # since the code above only exits the while loop when no zeros exist, the strict
+            # inequality is sufficient
+            if (graph[i][j] > 0):
+                # we'll do two checks for errors...this is because I'm being a little paranoid
+                # about the fact that I will not look through all 40,000 values by hand to see if they are right
+                # first, we'll check to make sure all edges have been properly preserved
+                if (graph[i][j] == 1 and graph[j][i] != 1):
+                    raise UserWarning("Matrix data has been corrupted. Upper half edge not found in lower half.")
+                # second, we'll make sure that the lower half didn't get any stray data
+                if (graph[i][j] != 1 and graph[j][i] != 0):
+                    raise UserWarning("Matrix data has been corrupted. Lower half contains unexpected data.")
+                graph[j][i] = graph[i][j]
 
     return graph
 

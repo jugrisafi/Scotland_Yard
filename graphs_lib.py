@@ -43,11 +43,11 @@ def makeEdgeListFromFile(inputFile):
 # returns a graph in the form of an adjacency matrix.
 def makeAdjacencyMatrixFromAdjacencyList(adjacencyList):
     # first, we set up the matrix and set all entries to 0
-    matrix = [[0 for i in range(len(adjacencyList))] for j in range(len(adjacencyList))]
+    matrix = [[0 for i in range(len(adjacencyList)+1)] for j in range(len(adjacencyList)+1)]
 
     # next, we'll set all entries in row 0 and column 0 to -2, since those values are off limits (we're not zero indexing our verticies)
     # and we'll set all entries of [x][x] to -1
-    for i in range(len(matrix)):
+    for i in range(len(matrix)+1):
         matrix[i][i] = -1
         matrix[0][i] = -2
         matrix[i][0] = -2
@@ -72,8 +72,8 @@ def setMinimumDistances(graph, adjacencyList):
 
     while(anyZeros):
         anyZeros = False
-        for i in range(len(graph)):
-            for j in range(len(graph)):
+        for i in range(len(graph)+1):
+            for j in range(i+1):
                 # first, we'll do a check to see if the data is a zero...if, so, we set anyZeros back to true to make sure we "scan" the graph again
                 if graph[i][j] == 0:
                     anyZeros = True
@@ -84,10 +84,36 @@ def setMinimumDistances(graph, adjacencyList):
                 if graph[i][j] == counter:
                     # we look at all verticies directly connected to i, and update their distance to j to be counter + 1 if they are not already connected to j (by a shorter route)
                     for v in adjacencyList[i]:
-                        if graph[i][v] == 0:
-                            graph[i][v] = counter + 1
+                        # check to make sure we're following the standard form where pairs of verticies are
+                        # always considered with the lowest first
+                        if v < j:
+                            if graph[v][j] == 0:
+                                graph[v][j] = counter + 1
+                        # if v > j, then we want to make sure we index with j first, since we're always
+                        # trying to keep ordered pairs with the smaller vertex number as the first
+                        else:
+                            if graph[j][v] == 0:
+                                graph[j][v] = counter + 1
 
         counter += 1
+    #end while
+
+    # finally, we "copy" our data from the "upper half" of the adjacency matrix
+    # to the "lower half." This may be considered strange, given the desire
+    # to always keep vertex pairs as (lower, higher), but
+    # when it comes to the AI playing the game, it will save the step
+    # of needing to do a conditional every time a distance is checked
+    for i in range(len(graph)+1):
+        for j in range(i+1):
+            # we'll do two checks for errors...this is because I'm being a little paranoid
+            # about the fact that I will not look through all 40,000 values by hand to see if they are right
+            # first, we'll check to make sure all edges have been properly preserved
+            if (graph[i][j] == 1 && graph[j][i] != 1):
+                raise UserWarning("Matrix data has been corrupted. Upper half edge not found in lower half.")
+            # second, we'll make sure that the lower half didn't get any stray data
+            if (graph[i][j] != 1 && graph[j][i] != 0):
+                raise UserWarning("Matrix data has been corrupted. Lower half contains unexpected data.")
+            graph[j][i] = graph[i][j]
 
     return graph
 

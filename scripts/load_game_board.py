@@ -1,80 +1,22 @@
 # -----------------------------------------------------------------------------
-# Name:         Graph_Data_Formatter
+# Name:         load_game_board
 # Purpose:      
 # 
 # Author:       Fiona Ding
-# Created:      4/7/18
+# Created:      5/1/18
 # -----------------------------------------------------------------------------
-"""
-Helpful functions to convert between various graph file input formats.
-"""
-import os
 import pandas as pd
+import networkx as nx
 
 
-def temp_converter():
-    """
-    Temporary helper function to clean up intermediate file.
-    """
-    df = pd.read_csv("Scotland_Yard_Graph_partial.csv")
 
-    df["Taxi Edges"] = df["Taxi Edges"].str.replace('[()]', '')
+list_file_name = os.path.join("game_board",
+                              "Scotland_Yard_Board_List_Format.csv")
 
-    df["Taxi Edges"] = df["Taxi Edges"].str.split(',')
-
-    # df["Taxi Edges"] = df["Taxi Edges"].
-
-    taxi = pd.Series(df['Taxi Edges'].values, index=df.Vertex)
-
-    taxi.to_csv('delete-taxi.csv')
+list_df = pd.read_csv(list_file_name)
 
 
-    df["Bus Edges"] = df["Bus Edges"].str.replace('[()]', '')
-
-    df["Bus Edges"] = df["Bus Edges"].str.split(',')
-
-    bus = pd.Series(df['Bus Edges'].values, index=df.Vertex)
-
-    bus.to_csv('delete-bus.csv')
-
-
-    df["Underground Edges"] = df["Underground Edges"].str.replace('[()]', '')
-
-    df["Underground Edges"] = df["Underground Edges"].str.split(',')
-
-    bus = pd.Series(df['Underground Edges'].values, index=df.Vertex)
-
-    bus.to_csv('delete-underground.csv')
-
-    #
-    # df2 = df.loc[~df["Taxi Edges"].isnull(), 'Taxi Edges']
-
-
-def convert_pairs_to_lists(edge_pairs):
-    """
-    Convert edge_pairs from a list of ordered pairs into a list of adjacent
-    neighbors.
-
-    Args:
-        edge_pairs:
-
-    Returns:
-
-    """
-    pass
-
-
-def convert_lists_to_pairs(edge_lists_df):
-    """
-    Convert edge_lists from a list of adjacent neighbors to a list of ordered
-    pairs.
-
-    Args:
-        edge_lists_df (DataFrame):
-
-    Returns:
-
-    """
+def create_graph_from_adjacency_list():
     # Replace empty cells with -1
     edge_lists_df.replace('--', '-1', inplace=True)
 
@@ -83,7 +25,6 @@ def convert_lists_to_pairs(edge_lists_df):
     edge_lists_df["Bus"] = edge_lists_df["Bus"].str.split(',')
     edge_lists_df["Subway"] = edge_lists_df["Subway"].str.split(',')
     edge_lists_df["Boat"] = edge_lists_df["Boat"].str.split(',')
-
 
 
     # Convert each column of edges into a dictionary
@@ -183,34 +124,3 @@ def convert_lists_to_pairs(edge_lists_df):
     pairs_df.index.name = "Vertex"
 
     pairs_df.replace('', '--', inplace=True)
-
-    return pairs_df
-
-
-
-def check_graph(edge_list):
-    """
-    Double check for typos, etc by looking for any uni-directional edges.
-    (Since the game board is an undirected graph.)
-
-    Args:
-        edge_list:
-
-    Returns:
-
-    """
-    pass
-
-
-
-if __name__ == '__main__':
-    list_file_name = os.path.join("game_board",
-                                  "Scotland_Yard_Board_List_Format.csv")
-
-    list_df = pd.read_csv(list_file_name)
-
-    out_df = convert_lists_to_pairs(list_df)
-
-    out_df.to_csv(os.path.join("game_board",
-                               "Scotland_Yard_Board_Pairs_Format.csv"))
-
